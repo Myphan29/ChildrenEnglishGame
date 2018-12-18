@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "42177543208",
+    "firebase_url": "https://englishgame-31aae.firebaseio.com",
+    "project_id": "englishgame-31aae",
+    "storage_bucket": "englishgame-31aae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:42177543208:android:0721725c2ce768e2",
+        "android_client_info": {
+          "package_name": "com.example.us.childrenenglishgame"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "42177543208-a7age9tis4ogokra75rm3jn1lcov8c8r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.us.childrenenglishgame",
+            "certificate_hash": "ad7c108945b405d0a11412f4c4b23c48f5d5a9da"
+          }
+        },
+        {
+          "client_id": "42177543208-igp2ng8a5df258ttiidh9qraohk7nh7t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB6wien6dKo6Kk_XdfnEXS9w9Mj8k45d2U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "42177543208-igp2ng8a5df258ttiidh9qraohk7nh7t.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

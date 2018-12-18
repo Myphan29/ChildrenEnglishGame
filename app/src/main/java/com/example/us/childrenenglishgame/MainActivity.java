@@ -10,8 +10,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -25,13 +26,12 @@ int firstCard, secondCard;
 int clickFirst, clickSecond;
 int cardNum = 1;
 int score = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         tvScore = findViewById(R.id.tv_Score);
-
         iv1 = findViewById(R.id.iv_1);
         iv2 = findViewById(R.id.iv_2);
         iv3 = findViewById(R.id.iv_3);
