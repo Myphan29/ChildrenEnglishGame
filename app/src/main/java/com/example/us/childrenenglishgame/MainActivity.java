@@ -2,12 +2,16 @@ package com.example.us.childrenenglishgame;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
@@ -17,20 +21,33 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
-TextView tvScore;
-ImageView iv1, iv2, iv3,
-          iv11, iv12, iv13;
-Integer[] cardsArray = {1,2,3,11,12,13};
-int img1, img2, img3, img11, img12, img13;
-int firstCard, secondCard;
-int clickFirst, clickSecond;
-int cardNum = 1;
-int score = 0;
+    TextView tvScore,txtTimer;
+    ImageView iv1, iv2, iv3,
+            iv11, iv12, iv13;
+    Integer[] cardsArray = {1,2,3,11,12,13};
+    int img1, img2, img3, img11, img12, img13;
+    int firstCard, secondCard;
+    int clickFirst, clickSecond;
+    int cardNum = 1;
+    int score = 0;
+    RelativeLayout layout;
+    private ProgressBar progressBar;
+    CountDownTimer mCountDownTimer;
+    int timer=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        layout= findViewById(R.id.MainLayout);
+        layout.setBackgroundResource(R.drawable.background);
+
+        //timer
+        txtTimer= findViewById(R.id.txtTimer);
+        progressBar = (ProgressBar) findViewById(R.id.pbTimer);
+        drawTimer();
+
         tvScore = findViewById(R.id.tv_Score);
         iv1 = findViewById(R.id.iv_1);
         iv2 = findViewById(R.id.iv_2);
@@ -99,7 +116,44 @@ int score = 0;
         });
 
     }
+    private void drawTimer(){
+        progressBar.setProgress(timer);
+        mCountDownTimer=new CountDownTimer(60000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timer++;
+                txtTimer.setText(timer+"/60");
+                progressBar.setProgress((int)timer*100/(60000/1000));
 
+            }
+            @Override
+            public void onFinish() {
+                timer++;
+                txtTimer.setText(timer+"/60");
+                progressBar.setProgress(100);
+                popupEndGame();
+            }
+        };
+        mCountDownTimer.start();
+
+    }
+    private void checkScore(){
+        if(0<timer&& timer<=10){
+            score=score+5;
+        }
+        if(10<timer && timer <=20){
+            score =score+3;
+        }
+        if(20<timer && timer <=40){
+            score =score+2;
+        }
+        if(timer>40){
+            score =score+1;
+        }
+        tvScore.setText("Score: "+score);
+        timer=0;
+        drawTimer();
+    }
     private void doStuff(ImageView iv, int card){
         int arr = cardsArray[card];
         if (arr == 1)
@@ -182,8 +236,7 @@ int score = 0;
             }else  if (clickSecond == 5){
                 iv13.setVisibility(View.INVISIBLE);
             }
-             score++;
-            tvScore.setText("Score: "+score);
+            checkScore();
         }else{
             iv1.setImageResource(R.drawable.icon);
             iv2.setImageResource(R.drawable.icon);
@@ -201,30 +254,37 @@ int score = 0;
 
         checkEnd();
     }
-    private void checkEnd(){
+    private boolean checkEnd(){
+        boolean isEnd=false;
         if(iv1.getVisibility()==View.INVISIBLE && iv2.getVisibility()==View.INVISIBLE
                 && iv3.getVisibility()==View.INVISIBLE
-        && iv11.getVisibility()==View.INVISIBLE
-        && iv12.getVisibility()==View.INVISIBLE
-        && iv13.getVisibility()==View.INVISIBLE){
-            AlertDialog.Builder alertDiaglogBuilder= new AlertDialog.Builder(MainActivity.this);
-            alertDiaglogBuilder.setMessage("GAME OVER! \n Your score is "+score).setCancelable(false)
-                    .setPositiveButton("NEW", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Intent intent= new Intent(getApplicationContext(),MainActivity.class);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }).setNegativeButton("EXIT", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    finish();
-                }
-            });
-            AlertDialog alertDialog = alertDiaglogBuilder.create();
-            alertDialog.show();
+                && iv11.getVisibility()==View.INVISIBLE
+                && iv12.getVisibility()==View.INVISIBLE
+                && iv13.getVisibility()==View.INVISIBLE){
+            isEnd=true;
+            popupEndGame();
         }
+        return isEnd;
+    }
+    private void popupEndGame(){
+        progressBar.setVisibility(View.GONE);
+        AlertDialog.Builder alertDiaglogBuilder= new AlertDialog.Builder(MainActivity.this);
+        alertDiaglogBuilder.setMessage("GAME OVER! \n Your score is "+score).setCancelable(false)
+                .setPositiveButton("NEW", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent= new Intent(getApplicationContext(),MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }).setNegativeButton("EXIT", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        AlertDialog alertDialog = alertDiaglogBuilder.create();
+        alertDialog.show();
     }
     private void frontofCardRes(){
         img1 = R.drawable.card1;
