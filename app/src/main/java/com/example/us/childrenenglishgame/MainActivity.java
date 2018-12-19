@@ -32,9 +32,6 @@ int score = 0;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvScore = findViewById(R.id.tv_Score);
-        ten = findViewById(R.id.txtTen);
-        //String tenplayer = FistMainActivity.getNamePlayer();
-        ten.setText("hihi");
 
         iv1 = findViewById(R.id.iv_1);
         iv2 = findViewById(R.id.iv_2);
