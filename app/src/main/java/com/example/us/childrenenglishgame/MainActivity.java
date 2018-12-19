@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
-TextView tvScore;
+TextView tvScore,ten;
 ImageView iv1, iv2, iv3,
           iv11, iv12, iv13;
 Integer[] cardsArray = {1,2,3,11,12,13};
@@ -32,6 +32,10 @@ int score = 0;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tvScore = findViewById(R.id.tv_Score);
+        ten = findViewById(R.id.txtTen);
+        //String tenplayer = FistMainActivity.getNamePlayer();
+        ten.setText("hihi");
+
         iv1 = findViewById(R.id.iv_1);
         iv2 = findViewById(R.id.iv_2);
         iv3 = findViewById(R.id.iv_3);

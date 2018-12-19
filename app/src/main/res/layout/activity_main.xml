@@ -14,8 +14,9 @@
         layout="@layout/images"
         android:layout_width="match_parent"
         android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_marginBottom="51dp" />
 
     <TextView
         android:id="@+id/tv_Score"
@@ -25,4 +26,18 @@
         android:layout_alignParentTop="true"
         android:text="Score: 0"
         android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/tvTen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_Score"
+        android:layout_alignStart="@+id/tv_Score"
+        android:layout_alignTop="@+id/tv_Score"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="51dp"
+        android:layout_marginBottom="-90dp"
+        android:text="Name"
+        android:textSize="30sp" />
+
 </RelativeLayout>
