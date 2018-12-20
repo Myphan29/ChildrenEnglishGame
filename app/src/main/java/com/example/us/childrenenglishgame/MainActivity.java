@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
-    TextView tvScore,txtTimer,ten;
+    TextView txt_Score,txt_Timer;
     ImageView iv1, iv2, iv3,
             iv11, iv12, iv13;
     Integer[] cardsArray = {1,2,3,11,12,13};
@@ -44,11 +44,11 @@ public class MainActivity extends AppCompatActivity {
         layout.setBackgroundResource(R.drawable.background);
 
         //timer
-        txtTimer= findViewById(R.id.txtTimer);
+        txt_Timer= findViewById(R.id.txtTimer);
         progressBar = (ProgressBar) findViewById(R.id.pbTimer);
         drawTimer();
 
-        tvScore = findViewById(R.id.tv_Score);
+        txt_Score = findViewById(R.id.tv_Score);
 
         iv1 = findViewById(R.id.iv_1);
         iv2 = findViewById(R.id.iv_2);
@@ -123,14 +123,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 timer++;
-                txtTimer.setText(timer+"/60");
+                txt_Timer.setText(timer+"/60");
                 progressBar.setProgress((int)timer*100/(60000/1000));
 
             }
             @Override
             public void onFinish() {
                 timer++;
-                txtTimer.setText(timer+"/60");
+                txt_Timer.setText(timer+"/60");
                 progressBar.setProgress(100);
                 popupEndGame();
             }
@@ -151,9 +151,7 @@ public class MainActivity extends AppCompatActivity {
         if(timer>40){
             score =score+1;
         }
-        tvScore.setText("Score: "+score);
-        timer=0;
-        drawTimer();
+        txt_Score.setText("Score: "+score);
     }
     private void doStuff(ImageView iv, int card){
         int arr = cardsArray[card];
