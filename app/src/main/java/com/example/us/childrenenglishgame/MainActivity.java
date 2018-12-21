@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,15 +22,17 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
-    TextView txt_Score,txt_Timer;
-    ImageView iv1, iv2, iv3,
-            iv11, iv12, iv13;
-    Integer[] cardsArray = {1,2,3,11,12,13};
-    int img1, img2, img3, img11, img12, img13;
+    TextView txt_Score,txt_Timer,txt_Level;
+    ImageView[] iv;
+    Integer[] cardsArray;
+    Integer[] cardsArrayTemp;
+    int[] idCards;
     int firstCard, secondCard;
     int clickFirst, clickSecond;
-    int cardNum = 1;
+    int selectedCard = 1;
     int score = 0;
+    int x = 0;
+    int tempID, countID, remainCards;
     RelativeLayout layout;
     private ProgressBar progressBar;
     CountDownTimer mCountDownTimer;
@@ -49,73 +52,13 @@ public class MainActivity extends AppCompatActivity {
         drawTimer();
 
         txt_Score = findViewById(R.id.tv_Score);
+        txt_Level=findViewById(R.id.txtLevel);
 
-        iv1 = findViewById(R.id.iv_1);
-        iv2 = findViewById(R.id.iv_2);
-        iv3 = findViewById(R.id.iv_3);
 
-        iv11 = findViewById(R.id.iv_11);
-        iv12 = findViewById(R.id.iv_12);
-        iv13 = findViewById(R.id.iv_13);
+        Shared.context = getApplicationContext();
 
-        iv1.setTag("0");
-        iv2.setTag("1");
-        iv3.setTag("2");
-        iv11.setTag("3");
-        iv12.setTag("4");
-        iv13.setTag("5");
-
-        frontofCardRes();
-        Collections.shuffle(Arrays.asList(cardsArray));
-
-        iv1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int theCard = Integer.parseInt((String) v.getTag());
-                doStuff(iv1, theCard);
-            }
-        });
-
-        iv2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int theCard = Integer.parseInt((String) v.getTag());
-                doStuff(iv2, theCard);
-            }
-        });
-
-        iv3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int theCard = Integer.parseInt((String) v.getTag());
-                doStuff(iv3, theCard);
-            }
-        });
-
-        iv11.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int theCard = Integer.parseInt((String) v.getTag());
-                doStuff(iv11, theCard);
-            }
-        });
-
-        iv12.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int theCard = Integer.parseInt((String) v.getTag());
-                doStuff(iv12, theCard);
-            }
-        });
-
-        iv13.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int theCard = Integer.parseInt((String) v.getTag());
-                doStuff(iv13, theCard);
-            }
-        });
-
+        tempID = 111;
+        playGame(1);
     }
     private void drawTimer(){
         progressBar.setProgress(timer);
@@ -132,7 +75,9 @@ public class MainActivity extends AppCompatActivity {
                 timer++;
                 txt_Timer.setText(timer+"/60");
                 progressBar.setProgress(100);
-                popupEndGame();
+                remainCards=0;
+                Shared.level=6;
+                checkEnd();
             }
         };
         mCountDownTimer.start();
@@ -151,146 +96,452 @@ public class MainActivity extends AppCompatActivity {
         if(timer>40){
             score =score+1;
         }
+        remainCards -= 2;
         txt_Score.setText("Score: "+score);
     }
-    private void doStuff(ImageView iv, int card){
-        int arr = cardsArray[card];
-        if (arr == 1)
-            iv.setImageResource(img1);
-        else if (arr == 2)
-            iv.setImageResource(img2);
-        else if (arr == 3)
-            iv.setImageResource(img3);
-        else if (arr == 11)
-            iv.setImageResource(img11);
-        else if (arr == 12)
-            iv.setImageResource(img12);
-        else if (arr == 13)
-            iv.setImageResource(img13);
 
-        if (cardNum == 1) {
-            firstCard = cardsArray[card];
-            if (firstCard > 10){
-                firstCard -= 10;
-            }
-            cardNum = 2;
-            clickFirst = card;
-            iv.setEnabled(false);
+    private void playGame(int level){
+        txt_Level.setText("Level "+level);
+        Shared.level = level;
+        addNumbersOfCard();
+        idCards = new int[Shared.numbersOfCard];
+        cardsArray = new Integer[Shared.numbersOfCard];
+        iv = new ImageView[Shared.numbersOfCard];
+        for (int i = 0; i < Shared.numbersOfCard; i++){
+            iv[i] = new ImageView(Shared.context);
         }
-        else if (cardNum == 2){
+        countID = Shared.numbersOfCard;
+        addScreen(Shared.level);
+        setOperation();
+    }
+
+    private void setOperation(){
+        tempID = 111;
+        countID = Shared.numbersOfCard;
+        switch (Shared.level) {
+            case 1:
+            case 2:
+                for (int i = 0; i < 2; i++) {
+                    switch (Shared.level) {
+                        case 1:
+                            for (int j = 0; j < 3; j++) {
+                                String id = "iv_" + tempID;
+                                int resID = getResources().getIdentifier(id, "id", getPackageName());
+                                String sDrawableID = "card" + tempID;
+                                int resDrawableID = getResources().getIdentifier(sDrawableID, "drawable", getPackageName());
+                                if (i == 0) {
+                                    iv[i + j] = findViewById(resID);
+                                    iv[i + j].setTag(Integer.toString(i + j));
+                                    cardsArray[i + j] = tempID;
+                                    idCards[i+j] = resDrawableID;
+                                } else {
+                                    iv[i + j + 2] = findViewById(resID);
+                                    iv[i + j + 2].setTag(Integer.toString(i + j + 2));
+                                    cardsArray[i+j+2]= tempID;
+                                    idCards[i+j+2] = resDrawableID;
+                                }
+                                tempID++;
+                                countID--;
+                                if (countID == Shared.numbersOfCard/2){
+                                    tempID = 211;
+                                }
+                            }
+                            break;
+                        case 2:
+                            for (int j = 0; j < 4; j++) {
+                                String id = "iv_" + tempID;
+                                int resID = getResources().getIdentifier(id, "id", getPackageName());
+                                String sDrawableID = "card" + tempID;
+                                int resDrawableID = getResources().getIdentifier(sDrawableID, "drawable", getPackageName());
+                                if (i == 0) {
+                                    iv[i + j] = findViewById(resID);
+                                    iv[i + j].setTag(Integer.toString(i + j));
+                                    cardsArray[i + j] = tempID;
+                                    idCards[i+j] = resDrawableID;
+                                } else if (i == 1){
+                                    iv[i + j + 3] = findViewById(resID);
+                                    iv[i + j + 3].setTag(Integer.toString(i + j + 3));
+                                    cardsArray[i + j + 3] = tempID;
+                                    idCards[i+j+3] = resDrawableID;
+                                }
+                                tempID++;
+                                countID--;
+                                if (countID == Shared.numbersOfCard/2){
+                                    tempID = 211;
+                                }
+                            }
+                            break;
+                    }
+                }
+                break;
+            case 3:
+                for (int i = 0; i < 3; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        String id = "iv_" + tempID;
+                        int resID = getResources().getIdentifier(id, "id", getPackageName());
+                        String sDrawableID = "card" + tempID;
+                        int resDrawableID = getResources().getIdentifier(sDrawableID, "drawable", getPackageName());
+                        if (i == 0) {
+                            iv[i + j] = findViewById(resID);
+                            iv[i + j].setTag(Integer.toString(i + j));
+                            cardsArray[i + j] = tempID;
+                            idCards[i+j] = resDrawableID;
+                        } else if (i == 1){
+                            iv[i + j + 3] = findViewById(resID);
+                            iv[i + j + 3].setTag(Integer.toString(i + j + 3));
+                            cardsArray[i + j + 3] = tempID;
+                            idCards[i+j+3] = resDrawableID;
+                        } else {
+                            iv[i + j + 6] = findViewById(resID);
+                            iv[i + j + 6].setTag(Integer.toString(i + j + 6));
+                            cardsArray[i + j +6] = tempID;
+                            idCards[i+j+6] = resDrawableID;
+                        }
+                        tempID++;
+                        countID--;
+                        if (countID == Shared.numbersOfCard/2){
+                            tempID = 211;
+                        }
+                    }
+                }
+                break;
+            case 4:
+            case 5:
+            case 6:
+                for (int i = 0; i < 4; i++) {
+                    switch (Shared.level) {
+                        case 4:
+                            for (int j = 0; j < 4; j++) {
+                                String id = "iv_" + tempID;
+                                int resID = getResources().getIdentifier(id, "id", getPackageName());
+                                String sDrawableID = "card" + tempID;
+                                int resDrawableID = getResources().getIdentifier(sDrawableID, "drawable", getPackageName());
+                                if (i == 0) {
+                                    iv[i + j] = findViewById(resID);
+                                    iv[i + j].setTag(Integer.toString(i + j));
+                                    cardsArray[i + j] = tempID;
+                                    idCards[i + j] = resDrawableID;
+                                } else if (i == 1){
+                                    iv[i + j + 3] = findViewById(resID);
+                                    iv[i + j + 3].setTag(Integer.toString(i + j + 3));
+                                    cardsArray[i + j + 3]= tempID;
+                                    idCards[i + j + 3] = resDrawableID;
+                                } else if (i == 2){
+                                    iv[i + j + 6] = findViewById(resID);
+                                    iv[i + j + 6].setTag(Integer.toString(i + j + 6));
+                                    cardsArray[i + j + 6]= tempID;
+                                    idCards[i + j + 6] = resDrawableID;
+                                } else {
+                                    iv[i + j + 9] = findViewById(resID);
+                                    iv[i + j + 9].setTag(Integer.toString(i + j + 9));
+                                    cardsArray[i + j + 9]= tempID;
+                                    idCards[i + j + 9] = resDrawableID;
+                                }
+                                tempID++;
+                                countID--;
+                                if (countID == Shared.numbersOfCard/2){
+                                    tempID = 211;
+                                }
+                            }
+                            break;
+                        case 5:
+                            for (int j = 0; j < 5; j++) {
+                                String id = "iv_" + tempID;
+                                int resID = getResources().getIdentifier(id, "id", getPackageName());
+                                String sDrawableID = "card" + tempID;
+                                int resDrawableID = getResources().getIdentifier(sDrawableID, "drawable", getPackageName());
+                                if (i == 0) {
+                                    iv[i + j] = findViewById(resID);
+                                    iv[i + j].setTag(Integer.toString(i + j));
+                                    cardsArray[i + j] = tempID;
+                                    idCards[i + j] = resDrawableID;
+                                } else if (i == 1){
+                                    iv[i + j + 4] = findViewById(resID);
+                                    iv[i + j + 4].setTag(Integer.toString(i + j + 4));
+                                    cardsArray[i + j + 4]= tempID;
+                                    idCards[i + j + 4] = resDrawableID;
+                                } else if (i == 2){
+                                    iv[i + j + 8] = findViewById(resID);
+                                    iv[i + j + 8].setTag(Integer.toString(i + j + 8));
+                                    cardsArray[i + j + 8]= tempID;
+                                    idCards[i + j + 8] = resDrawableID;
+                                } else {
+                                    iv[i + j + 12] = findViewById(resID);
+                                    iv[i + j + 12].setTag(Integer.toString(i + j + 12));
+                                    cardsArray[i + j + 12]= tempID;
+                                    idCards[i + j + 12] = resDrawableID;
+                                }
+                                tempID++;
+                                countID--;
+                                if (countID == Shared.numbersOfCard/2){
+                                    tempID = 211;
+                                }
+                            }
+                            break;
+                        case 6:
+                            for (int j = 0; j < 6; j++) {
+                                String id = "iv_" + tempID;
+                                int resID = getResources().getIdentifier(id, "id", getPackageName());
+                                String sDrawableID = "card" + tempID;
+                                int resDrawableID = getResources().getIdentifier(sDrawableID, "drawable", getPackageName());
+                                if (i == 0) {
+                                    iv[i + j] = findViewById(resID);
+                                    iv[i + j].setTag(Integer.toString(i + j));
+                                    cardsArray[i + j] = tempID;
+                                    idCards[i + j] = resDrawableID;
+                                } else if (i == 1){
+                                    iv[i + j + 5] = findViewById(resID);
+                                    iv[i + j + 5].setTag(Integer.toString(i + j + 5));
+                                    cardsArray[i + j + 5]= tempID;
+                                    idCards[i + j + 5] = resDrawableID;
+                                } else if (i == 2){
+                                    iv[i + j + 10] = findViewById(resID);
+                                    iv[i + j + 10].setTag(Integer.toString(i + j + 10));
+                                    cardsArray[i + j + 10]= tempID;
+                                    idCards[i + j + 10] = resDrawableID;
+                                } else {
+                                    iv[i + j + 15] = findViewById(resID);
+                                    iv[i + j + 15].setTag(Integer.toString(i + j + 15));
+                                    cardsArray[i + j + 15]= tempID;
+                                    idCards[i + j + 15] = resDrawableID;
+                                }
+                                tempID++;
+                                countID--;
+                                if (countID == Shared.numbersOfCard/2){
+                                    tempID = 211;
+                                }
+                            }
+                            break;
+                    }
+                }
+                break;
+        }
+        cardsArrayTemp = new Integer[Shared.numbersOfCard];
+        cardsArrayTemp = cardsArray.clone();
+        Collections.shuffle(Arrays.asList(cardsArray));
+        for (x = 0; x < iv.length; x++){
+            iv[x].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int tag = Integer.parseInt((String) v.getTag());
+                    flipCard(iv[tag], tag);
+                }
+            });
+        }
+    }
+
+    private void addNumbersOfCard(){
+        switch (Shared.level){
+            case 1: Shared.numbersOfCard = 3*2;break;
+            case 2: Shared.numbersOfCard = 4*2;break;
+            case 3: Shared.numbersOfCard = 4*3;break;
+            case 4: Shared.numbersOfCard = 4*4;break;
+            case 5: Shared.numbersOfCard = 5*4;break;
+            case 6: Shared.numbersOfCard = 6*4;break;
+        }
+        remainCards = Shared.numbersOfCard;
+    }
+
+    public void addScreen(int level){
+        tempID = 111;
+        Shared.layoutHolder = findViewById(R.id.layoutHolder);
+        Shared.layoutHolder.removeAllViews();
+
+        LinearLayout outer_ll = new LinearLayout(Shared.context);
+        outer_ll.setOrientation(LinearLayout.VERTICAL);
+        outer_ll.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        switch (level) {
+            case 1:
+            case 2:
+                outer_ll.setWeightSum(2);
+                for (int i = 0; i < 2; i++){
+                    LinearLayout inner_ll = new LinearLayout(Shared.context);
+                    inner_ll.setOrientation(LinearLayout.HORIZONTAL);
+                    inner_ll.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1));
+                    switch (level){
+                        case 1:
+                            inner_ll.setWeightSum(3);
+                            for (int j = 0; j < 3; j++){
+                                generateImgView(inner_ll);
+                            }
+                            break;
+                        case 2:
+                            inner_ll.setWeightSum(4);
+                            for (int j = 0; j < 4; j++){
+                                generateImgView(inner_ll);
+                            }
+                            break;
+                    }
+                    outer_ll.addView(inner_ll);
+                }
+                break;
+            case 3:
+                outer_ll.setWeightSum(3);
+                for (int i = 0; i < 3; i++){
+                    LinearLayout inner_ll = new LinearLayout(Shared.context);
+                    inner_ll.setOrientation(LinearLayout.HORIZONTAL);
+                    inner_ll.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1));
+                    inner_ll.setWeightSum(4);
+                    for (int j = 0; j < 4; j++){
+                        generateImgView(inner_ll);
+                    }
+                    outer_ll.addView(inner_ll);
+                }
+                break;
+            case 4:
+            case 5:
+            case 6:
+                outer_ll.setWeightSum(4);
+                for (int i = 0; i < 4; i++){
+                    LinearLayout inner_ll = new LinearLayout(Shared.context);
+                    inner_ll.setOrientation(LinearLayout.HORIZONTAL);
+                    inner_ll.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1));
+                    switch (level){
+                        case 4:
+                            inner_ll.setWeightSum(4);
+                            for (int j = 0; j < 4; j++){
+                                generateImgView(inner_ll);
+                            }
+                            break;
+                        case 5:
+                            inner_ll.setWeightSum(5);
+                            for (int j = 0; j < 5; j++){
+                                generateImgView(inner_ll);
+                            }
+                            break;
+                        case 6:
+                            inner_ll.setWeightSum(6);
+                            for (int j = 0; j < 6; j++){
+                                generateImgView(inner_ll);
+                            }
+                            break;
+                    }
+                    outer_ll.addView(inner_ll);
+                }
+                break;
+        }
+        Shared.layoutHolder.addView(outer_ll);
+    }
+
+    private void generateImgView(LinearLayout parent){
+        ImageView imageView = new ImageView(Shared.context);
+        String id = "iv_" + tempID;
+        int resID = getResources().getIdentifier(id, "id", getPackageName());
+        imageView.setId(resID);
+        tempID++;
+        countID--;
+        if (countID == Shared.numbersOfCard/2){
+            tempID = 211;
+        }
+        imageView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT, 1));
+        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imageView.setImageResource(R.drawable.icon);
+        parent.addView(imageView);
+    }
+
+    private void flipCard(ImageView imv, int card){
+        int arr = cardsArray[card];
+        for(int i=0;i<cardsArrayTemp.length;i++){
+            if(arr==cardsArrayTemp[i]){
+                imv.setImageResource(idCards[i]);
+                break;
+            }
+        }
+        if (selectedCard == 1) {
+            firstCard = arr;
+            if (firstCard > 200){
+                firstCard -= 100;
+            }
+            selectedCard = 2;
+            clickFirst = card;
+            imv.setEnabled(false);
+        }
+        else if (selectedCard == 2){
             secondCard = cardsArray[card];
-            if (secondCard > 10)
-                secondCard -= 10;
-            cardNum = 1;
+            if (secondCard > 200)
+                secondCard -= 100;
+            selectedCard = 1;
             clickSecond = card;
-            iv1.setEnabled(false);
-            iv2.setEnabled(false);
-            iv3.setEnabled(false);
-            iv11.setEnabled(false);
-            iv12.setEnabled(false);
-            iv13.setEnabled(false);
+            for (int i = 0; i < iv.length; i++){
+                iv[i].setEnabled(false);
+            }
 
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    calculate();
+                    calculate(clickFirst,clickSecond);
                 }
-            }, 1000);
+            }, 500);
         }
     }
 
-    private void calculate(){
+    private void calculate(int clickFirst, int clickSecond ){
         if (firstCard == secondCard){
-            if (clickFirst == 0){
-                iv1.setVisibility(View.INVISIBLE);
-            }else  if (clickFirst == 1){
-                iv2.setVisibility(View.INVISIBLE);
-            }
-            else  if (clickFirst == 2){
-                iv3.setVisibility(View.INVISIBLE);
-            }
-            else  if (clickFirst == 3){
-                iv11.setVisibility(View.INVISIBLE);
-            }
-            else  if (clickFirst == 4){
-                iv12.setVisibility(View.INVISIBLE);
-            }else  if (clickFirst == 5){
-                iv13.setVisibility(View.INVISIBLE);
-            }
-
-            if (clickSecond == 0){
-                iv1.setVisibility(View.INVISIBLE);
-            }else  if (clickSecond == 1){
-                iv2.setVisibility(View.INVISIBLE);
-            }
-            else  if (clickSecond == 2){
-                iv3.setVisibility(View.INVISIBLE);
-            }
-            else  if (clickSecond == 3){
-                iv11.setVisibility(View.INVISIBLE);
-            }
-            else  if (clickSecond == 4){
-                iv12.setVisibility(View.INVISIBLE);
-            }else  if (clickSecond == 5){
-                iv13.setVisibility(View.INVISIBLE);
-            }
+            iv[clickFirst].setVisibility(View.INVISIBLE);
+            iv[clickSecond].setVisibility(View.INVISIBLE);
             checkScore();
         }else{
-            iv1.setImageResource(R.drawable.icon);
-            iv2.setImageResource(R.drawable.icon);
-            iv3.setImageResource(R.drawable.icon);
-            iv11.setImageResource(R.drawable.icon);
-            iv12.setImageResource(R.drawable.icon);
-            iv13.setImageResource(R.drawable.icon);
+            for (int i = 0; i < iv.length; i++){
+                iv[i].setImageResource(R.drawable.icon);
+            }
         }
-        iv1.setEnabled(true);
-        iv2.setEnabled(true);
-        iv3.setEnabled(true);
-        iv11.setEnabled(true);
-        iv12.setEnabled(true);
-        iv13.setEnabled(true);
-
+        for (int i = 0; i < iv.length; i++){
+            iv[i].setEnabled(true);
+        }
         checkEnd();
     }
-    private boolean checkEnd(){
-        boolean isEnd=false;
-        if(iv1.getVisibility()==View.INVISIBLE && iv2.getVisibility()==View.INVISIBLE
-                && iv3.getVisibility()==View.INVISIBLE
-                && iv11.getVisibility()==View.INVISIBLE
-                && iv12.getVisibility()==View.INVISIBLE
-                && iv13.getVisibility()==View.INVISIBLE){
-            isEnd=true;
-            popupEndGame();
-        }
-        return isEnd;
-    }
-    private void popupEndGame(){
-        progressBar.setVisibility(View.GONE);
-        AlertDialog.Builder alertDiaglogBuilder= new AlertDialog.Builder(MainActivity.this);
-        alertDiaglogBuilder.setMessage("GAME OVER! \n Your score is "+score).setCancelable(false)
-                .setPositiveButton("NEW", new DialogInterface.OnClickListener() {
+    private void checkEnd(){
+        if (remainCards == 0){
+            mCountDownTimer.cancel();
+            AlertDialog.Builder alertDialogBuilder= new AlertDialog.Builder(MainActivity.this);
+            if (Shared.level != 6){
+                alertDialogBuilder.setMessage("WIN! \nYour score is " + score)
+                        .setPositiveButton("NEXT", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                timer=0;
+                                playGame(Shared.level + 1);
+                                drawTimer();
+                            }
+                        })
+                        .setNegativeButton("RESET", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                score = 0;
+                                txt_Score.setText("Score: " + score);
+                                timer=0;
+                                playGame(1);
+                                drawTimer();
+                            }
+                        })
+                        .setNeutralButton("EXIT", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+            }
+            else {
+                alertDialogBuilder.setMessage("GAME OVER! \nYour score is "+score).setCancelable(false)
+                        .setPositiveButton("AGAIN", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                score = 0;
+                                txt_Score.setText("Score: " + score);
+                                timer=0;
+                                playGame(1);
+                                drawTimer();
+                            }
+                        }).setNegativeButton("EXIT", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent= new Intent(getApplicationContext(),MainActivity.class);
-                        startActivity(intent);
                         finish();
                     }
-                }).setNegativeButton("EXIT", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                finish();
+                });
             }
-        });
-        AlertDialog alertDialog = alertDiaglogBuilder.create();
-        alertDialog.show();
-    }
-    private void frontofCardRes(){
-        img1 = R.drawable.card1;
-        img2 = R.drawable.card2;
-        img3 = R.drawable.card3;
-        img11 = R.drawable.card11;
-        img12 = R.drawable.card12;
-        img13 = R.drawable.card13;
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
     }
 }
