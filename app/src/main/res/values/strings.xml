@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">ChildrenEnglishGame</string>
     <string name="hight_score">Hight Score</string>
+    <string name="bakc"><![CDATA[<--]]></string>
 </resources>

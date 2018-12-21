@@ -28,7 +28,7 @@ import com.google.gson.Gson;
 
 public class FirstMainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    Button btn_Play,btn_SignOut,btn_Exit,btn_Score;
+    Button btn_Play,btn_SignOut,btn_Exit,btn_Score,btn_About;
     SignInButton btn_SignIn;
     TextView txt_Name;
 
@@ -44,7 +44,7 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
 
         btn_Score = (Button)findViewById(R.id.btn_Score);
         txt_Name = (TextView)findViewById(R.id.txtTen);
-
+        btn_About = findViewById(R.id.btn_about);
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -78,6 +78,13 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
 
                 }
 
+            }
+        });
+        final Intent tut = new Intent(this, TutActivity.class);
+        btn_About.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(tut);
             }
         });
         btn_Exit = (Button)findViewById(R.id.btn_Exit);
