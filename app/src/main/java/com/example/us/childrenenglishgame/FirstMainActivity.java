@@ -1,5 +1,6 @@
 package com.example.us.childrenenglishgame;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -31,12 +33,13 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
 
     private GoogleApiClient mGoogleApiClient;
     int RC_SIGN_IN = 1;
+    User guest = new User();
 
-    public static String name = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_main);
+        // instant User
 
 
         txt_Name = (TextView)findViewById(R.id.txtTen);
@@ -55,10 +58,22 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
         final Intent mainActivy = new Intent(this, MainActivity.class);
 
         btn_Play = (Button)findViewById(R.id.btn_Play);
+        Log.d("Meoooo","suuu" + guest.getUsername());
         btn_Play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(mainActivy);
+
+                if (guest.getUsername() != null) {
+                    startActivity(mainActivy);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Please login for play game",
+                            Toast.LENGTH_SHORT);
+
+                    toast.show();
+
+                }
+
             }
         });
         btn_Exit = (Button)findViewById(R.id.btn_Exit);
@@ -108,11 +123,15 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             // Signed in successfully, show authenticated UI.
-            txt_Name.setText(account.getDisplayName());
-            name = account.getDisplayName();
+            guest.username = account.getDisplayName();
+            guest.email = account.getEmail();
+            guest.token = account.getIdToken();
+            txt_Name.setText(guest.getUsername());
+
+            Log.d("Account " , "account" + guest.getUsername());
             btn_SignOut.setVisibility(View.VISIBLE);
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
+            // The ApiException status code indicates the detailed failure sreason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
         }
     }
@@ -126,7 +145,8 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
-                txt_Name.setText("Thoát thành công");
+                guest.clearInfo();
+                txt_Name.setText("...");
                 AlertDialog.Builder alertDiaglogBuilder= new AlertDialog.Builder(FirstMainActivity.this);
                 alertDiaglogBuilder.setMessage("Thoát thành công");
                 AlertDialog alertDialog = alertDiaglogBuilder.create();
@@ -140,7 +160,5 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d("Failed",connectionResult +"");
     }
-    public static String getNamePlayer(){
-        return name;
-    }
+
 }

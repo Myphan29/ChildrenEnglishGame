@@ -4,21 +4,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FirstMainActivity">
+    tools:context=".FirstMainActivity"
+    tools:layout_editor_absoluteY="25dp">
 
     <Button
         android:id="@+id/btn_Exit"
         android:layout_width="115dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="148dp"
-        android:layout_marginEnd="148dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="29dp"
         android:background="@color/colorPrimaryDark"
         android:text="Exit"
         android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/txtTen"
+        app:layout_constraintBottom_toTopOf="@+id/btn_SignOut"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.469"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_Score" />
 
@@ -26,49 +24,42 @@
         android:id="@+id/btn_Play"
         android:layout_width="115dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="148dp"
-        android:layout_marginEnd="148dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="32dp"
         android:background="@color/colorPrimaryDark"
         android:text="Play"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/btn_Score"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.467"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtWelcome" />
+        app:layout_constraintTop_toBottomOf="@+id/txtTen" />
 
     <Button
         android:id="@+id/btn_Score"
         android:layout_width="115dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="148dp"
-        android:layout_marginEnd="148dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="48dp"
         android:background="@color/colorPrimaryDark"
         android:text="Score"
         android:textColor="@color/colorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/btn_Exit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.471"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_Play" />
 
     <TextView
         android:id="@+id/txtWelcome"
-        android:layout_width="368dp"
-        android:layout_height="86dp"
-        android:layout_marginStart="45dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="45dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="56dp"
+        android:layout_marginEnd="8dp"
         android:fontFamily="cursive"
         android:text="Welcome to Game"
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
         android:textSize="36sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/btn_Play"
+        app:layout_constraintBottom_toTopOf="@+id/txtTen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -77,40 +68,36 @@
         android:id="@+id/btn_SignIn"
         android:layout_width="113dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtTen" />
-
-    <TextView
-        android:id="@+id/txtTen"
-        android:layout_width="140dp"
-        android:layout_height="23dp"
-        android:layout_marginStart="4dp"
-        android:layout_marginBottom="8dp"
-        android:text="Vui lòng đăng nhập"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/btn_SignIn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.495"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_Exit" />
+        app:layout_constraintTop_toTopOf="@+id/btn_SignOut" />
 
     <Button
         android:id="@+id/btn_SignOut"
-        android:layout_width="wrap_content"
+        android:layout_width="116dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="100dp"
         android:background="@color/colorPrimaryDark"
         android:text="Logout"
         android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/txtTen"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/txtTen"
-        app:layout_constraintTop_toTopOf="@+id/txtTen" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_Exit" />
+
+    <TextView
+        android:id="@+id/txtTen"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="6dp"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/btn_Play"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtWelcome" />
 
 </android.support.constraint.ConstraintLayout>

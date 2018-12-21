@@ -6,28 +6,40 @@ public class User {
 
     public String username;
     public String email;
-    public String password;
-    public Date birdthday;
+    public String token;
+    public String score;
 
-    public User(String email, String password) {
+    public User(String username, String email, String token, String score) {
+        this.username = username;
         this.email = email;
-        this.password = password;
+        this.token = token;
+        this.score = score;
+    }
+
+    public User() {
     }
 
     public String getUsername() {
         return username;
     }
 
+    public void clearInfo() {
+        this.username = null;
+        this.email = null;
+        this.token = null;
+        this.score = null;
+    }
+
     public String getEmail() {
         return email;
     }
 
-    public String getPassword() {
-        return password;
+    public String getToken() {
+        return token;
     }
 
-    public Date getBirdthday() {
-        return birdthday;
+    public String getScore() {
+        return score;
     }
 
     public void setUsername(String username) {
@@ -38,11 +50,11 @@ public class User {
         this.email = email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setToken(String token) {
+        this.token = token;
     }
 
-    public void setBirdthday(Date birdthday) {
-        this.birdthday = birdthday;
+    public void setScore(String score) {
+        this.score = score;
     }
 }
