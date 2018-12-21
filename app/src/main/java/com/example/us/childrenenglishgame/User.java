@@ -7,9 +7,9 @@ public class User {
     public String username;
     public String email;
     public String token;
-    public String score;
+    public int score;
 
-    public User(String username, String email, String token, String score) {
+    public User(String username, String email, String token, int score) {
         this.username = username;
         this.email = email;
         this.token = token;
@@ -27,7 +27,7 @@ public class User {
         this.username = null;
         this.email = null;
         this.token = null;
-        this.score = null;
+        this.score = 0;
     }
 
     public String getEmail() {
@@ -38,7 +38,7 @@ public class User {
         return token;
     }
 
-    public String getScore() {
+    public int getScore() {
         return score;
     }
 
@@ -54,7 +54,7 @@ public class User {
         this.token = token;
     }
 
-    public void setScore(String score) {
+    public void setScore(int score) {
         this.score = score;
     }
 }

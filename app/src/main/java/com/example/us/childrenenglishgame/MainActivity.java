@@ -16,12 +16,15 @@ import android.widget.TextView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
-    TextView txt_Score,txt_Timer;
+    TextView txt_Score,txt_Timer, txt_user;
     ImageView iv1, iv2, iv3,
             iv11, iv12, iv13;
     Integer[] cardsArray = {1,2,3,11,12,13};
@@ -42,7 +45,10 @@ public class MainActivity extends AppCompatActivity {
 
         layout= findViewById(R.id.MainLayout);
         layout.setBackgroundResource(R.drawable.background);
-
+        Gson gson = new Gson();
+        User guest = gson.fromJson(getIntent().getStringExtra("guest"), User.class);
+        txt_user = (TextView)findViewById(R.id.txt_user);
+        txt_user.setText(guest.getUsername());
         //timer
         txt_Timer= findViewById(R.id.txtTimer);
         progressBar = (ProgressBar) findViewById(R.id.pbTimer);

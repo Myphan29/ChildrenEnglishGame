@@ -24,6 +24,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 
 public class FirstMainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -64,6 +65,9 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
             public void onClick(View v) {
 
                 if (guest.getUsername() != null) {
+                    Gson gson = new Gson();
+                    String myJson = gson.toJson(guest);
+                    mainActivy.putExtra("guest", myJson);
                     startActivity(mainActivy);
                 } else {
                     Toast toast = Toast.makeText(getApplicationContext(),

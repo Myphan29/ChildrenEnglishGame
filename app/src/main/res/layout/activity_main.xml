@@ -18,7 +18,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="87dp"
+        android:layout_marginTop="120dp"
         android:layout_marginBottom="12dp" />
 
     <TextView
@@ -62,5 +62,17 @@
         android:textAlignment="center"
         android:textSize="18sp"
         tools:text="Tim" />
+
+    <TextView
+        android:id="@+id/txt_user"
+        android:layout_width="324dp"
+        android:layout_height="61dp"
+        android:layout_alignStart="@+id/pbTimer"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="70dp"
+        android:fontFamily="cursive"
+        android:textSize="30sp"
+        android:textStyle="bold|italic" />
 
 </RelativeLayout>
