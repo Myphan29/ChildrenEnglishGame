@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ChildrenEnglishGame</string>
+    <string name="hight_score">Hight Score</string>
 </resources>

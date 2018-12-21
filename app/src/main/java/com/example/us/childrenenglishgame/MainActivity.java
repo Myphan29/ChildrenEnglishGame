@@ -37,16 +37,17 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     CountDownTimer mCountDownTimer;
     int timer=0;
-
+    private DatabaseReference mDatabase;
+    User guest;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         layout= findViewById(R.id.MainLayout);
         layout.setBackgroundResource(R.drawable.background);
         Gson gson = new Gson();
-        User guest = gson.fromJson(getIntent().getStringExtra("guest"), User.class);
+        guest= gson.fromJson(getIntent().getStringExtra("guest"), User.class);
         txt_user = (TextView)findViewById(R.id.txt_user);
         txt_user.setText(guest.getUsername());
         //timer
@@ -267,6 +268,10 @@ public class MainActivity extends AppCompatActivity {
                 && iv12.getVisibility()==View.INVISIBLE
                 && iv13.getVisibility()==View.INVISIBLE){
             isEnd=true;
+            guest.setScore(score);
+            Long tsLong = System.currentTimeMillis()/1000;
+            String ts = tsLong.toString();
+            mDatabase.child("users").child(ts).setValue(guest);
             popupEndGame();
         }
         return isEnd;

@@ -2,14 +2,15 @@ package com.example.us.childrenenglishgame;
 
 import java.util.Date;
 
-public class User {
-
+public class User implements Comparable<User>{
+    public String id;
     public String username;
     public String email;
     public String token;
     public int score;
 
-    public User(String username, String email, String token, int score) {
+    public User (String id, String username, String email, String token, int score) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.token = token;
@@ -17,6 +18,14 @@ public class User {
     }
 
     public User() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -56,5 +65,10 @@ public class User {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    @Override
+    public int compareTo(User current) {
+        return (this.score - current.score);
     }
 }
