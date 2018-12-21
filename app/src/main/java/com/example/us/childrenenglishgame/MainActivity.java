@@ -66,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
         playGame(1);
 
         //
+        zPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlayAndPause();
+            }
+        });
     }
     public void PlayAndPause() {
         if (isPause == false) {
@@ -107,12 +113,7 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         mCountDownTimer.start();
-        zPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PlayAndPause();
-            }
-        });
+
     }
     private void checkScore(){
         if(0<timer&& timer<=10){
