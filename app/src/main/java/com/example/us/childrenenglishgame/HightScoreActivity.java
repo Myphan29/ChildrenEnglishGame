@@ -18,18 +18,18 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
+
 
 public class HightScoreActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
-    ArrayList<String>list_userNew =new ArrayList<String>();
+
     GridView grd_tb;
     ArrayAdapter<String> ada_Usernew;
     ArrayList<User> listUser = new ArrayList<User>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,14 +41,8 @@ public class HightScoreActivity extends AppCompatActivity {
         recentUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-//                ArrayAdapter<Integer> ada_count;
-//
-//                ArrayAdapter<Integer> ada_score;
-//                ArrayList<Integer>list_count= new ArrayList<Integer>();
-//
-//                ArrayList<Integer>list_score =new ArrayList<Integer>();
-
-                int count=1;
+                ArrayList<String> list_userNew = new ArrayList<String>();
+                int count = 1;
                 for (DataSnapshot user : dataSnapshot.getChildren()) {
                     User meo = new User();
                     int Score = user.getValue(User.class).getScore();
@@ -59,27 +53,32 @@ public class HightScoreActivity extends AppCompatActivity {
                     count++;
                     listUser.add(meo);
                 }
-                Collections.sort(listUser);
-                for(int i=0;i<5;i++) {
-                    try {
-                        list_userNew.add(String.valueOf(i++));
-                        list_userNew.add(listUser.get(i).getUsername());
-                        list_userNew.add(String.valueOf(listUser.get(i).getScore()));
-                        Log.d("meomeo", "sds" + listUser.get(i).getUsername());
-                    }catch (Exception e) {
+                ArrayList<User> listSortNew = new ArrayList<User>();
+                listUser = sortSontheB(listUser);
+                if (listUser.size() > 5) {
+                    for (int i = 1; i < 6; i++) {
+                        try {
+                            list_userNew.add(String.valueOf(i));
+                            list_userNew.add(listUser.get(i).getUsername());
+                            list_userNew.add(String.valueOf(listUser.get(i).getScore()));
+                            Log.d("meomeo", "sds" + listSortNew.get(i).getUsername());
+                        } catch (Exception e) {
+
+                        }
 
                     }
-
+                } else {
+                    int Count=1;
+                    for (User user : listUser) {
+                        list_userNew.add(String.valueOf(Count));
+                        list_userNew.add(user.getUsername());
+                        list_userNew.add(String.valueOf(user.getScore()));
+                        Count++;
+                    }
                 }
                 ada_Usernew = new ArrayAdapter<String>(HightScoreActivity.this, android.R.layout.simple_list_item_1, list_userNew);
                 grd_tb.setAdapter(ada_Usernew);
-//                ada_count = new ArrayAdapter<Integer>(HightScoreActivity.this, android.R.layout.simple_list_item_1, list_count);
-//                ada_score = new ArrayAdapter<Integer>(HightScoreActivity.this, android.R.layout.simple_list_item_2, list_score);
 
-//                ArrayAdapter<User> ada_user = new  ArrayAdapter<User>(HightScoreActivity.this, android.R.layout.simple_list_item_1, listUser);
-
-//                grd_tb.setAdapter(ada_username);
-                // grd_tb.setAdapter(ada_user);
 
             }
 
@@ -91,10 +90,24 @@ public class HightScoreActivity extends AppCompatActivity {
             }
         });
 
-//        for(User user: listUser){
-//            Log.d("loadPost:onCancelled", "sds" + user.getScore());
-//        }
 
+    }
+    public ArrayList<User> sortSontheB(ArrayList<User> arrUser) {
+        for (int i =0; i < arrUser.size();i++) {
+            for (int j=0;j < arrUser.size()-1; j++) {
+                if(arrUser.get(i).getScore() > arrUser.get(j).getScore()) {
+                    int c = arrUser.get(i).getScore();
+                    User meo = new User();
+                    meo.setUsername(arrUser.get(i).getUsername());
+                    meo.setScore(arrUser.get(i).getScore());
+                    arrUser.remove(i);
+                    arrUser.add(i, arrUser.get(j) );
 
+                    arrUser.remove(j);
+                    arrUser.add(j, meo);
+                }
+            }
+        }
+        return  arrUser;
     }
 }
