@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     final Handler handler = new Handler();
     String tmpTime = "";
     boolean isPause = false;
+    LinearLayout GPA;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         //declare font awesome
         Typeface font = Typeface.createFromAsset( getAssets(), "fontawesome-webfont.ttf" );
         zPause.setTypeface(font);
+        //
+        GPA = (LinearLayout)findViewById(R.id.layoutHolder);
         //timer
         txt_Timer= findViewById(R.id.txtTimer);
         progressBar = (ProgressBar) findViewById(R.id.pbTimer);
@@ -63,6 +66,24 @@ public class MainActivity extends AppCompatActivity {
         playGame(1);
 
         //
+    }
+    public void PlayAndPause() {
+        if (isPause == false) {
+            mCountDownTimer.cancel();
+            mCountDownTimer = null;
+            isPause = true;
+            zPause.setText(getString(R.string.ic_play));
+            for (int i = 0; i < Shared.numbersOfCard; i++){
+                iv[i].setClickable(false);
+            }
+        }else{
+            isPause = false;
+            drawTimer();
+            zPause.setText(getString(R.string.ic_pause));
+            for (int i = 0; i < Shared.numbersOfCard; i++){
+                iv[i].setClickable(true);
+            }
+        }
     }
     private void drawTimer(){
         progressBar.setProgress(timer);
@@ -89,16 +110,7 @@ public class MainActivity extends AppCompatActivity {
         zPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isPause == false) {
-                    mCountDownTimer.cancel();
-                    mCountDownTimer = null;
-                    isPause = true;
-                    zPause.setText(getString(R.string.ic_play));
-                }else{
-                    isPause = false;
-                    drawTimer();
-                    zPause.setText(getString(R.string.ic_pause));
-                }
+                PlayAndPause();
             }
         });
     }
