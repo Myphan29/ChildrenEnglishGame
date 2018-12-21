@@ -1,22 +1,19 @@
 package com.example.us.childrenenglishgame;
 
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,6 +21,7 @@ import java.util.Collections;
 public class MainActivity extends AppCompatActivity {
     TextView txt_Score,txt_Timer,txt_Level;
     ImageView[] iv;
+    Button zPause;
     Integer[] cardsArray;
     Integer[] cardsArrayTemp;
     int[] idCards;
@@ -37,15 +35,19 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     CountDownTimer mCountDownTimer;
     int timer=0;
-
+    final Handler handler = new Handler();
+    String tmpTime = "";
+    boolean isPause = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        zPause = (Button)findViewById(R.id.btnPause);
         layout= findViewById(R.id.MainLayout);
         layout.setBackgroundResource(R.drawable.background);
-
+        //declare font awesome
+        Typeface font = Typeface.createFromAsset( getAssets(), "fontawesome-webfont.ttf" );
+        zPause.setTypeface(font);
         //timer
         txt_Timer= findViewById(R.id.txtTimer);
         progressBar = (ProgressBar) findViewById(R.id.pbTimer);
@@ -59,16 +61,19 @@ public class MainActivity extends AppCompatActivity {
 
         tempID = 111;
         playGame(1);
+
+        //
     }
     private void drawTimer(){
         progressBar.setProgress(timer);
-        mCountDownTimer=new CountDownTimer(60000,1000) {
+        mCountDownTimer = new CountDownTimer(60000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 timer++;
                 txt_Timer.setText(timer+"/60");
                 progressBar.setProgress((int)timer*100/(60000/1000));
-
+                //
+                tmpTime = txt_Timer.getText().toString();
             }
             @Override
             public void onFinish() {
@@ -81,7 +86,21 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         mCountDownTimer.start();
-
+        zPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isPause == false) {
+                    mCountDownTimer.cancel();
+                    mCountDownTimer = null;
+                    isPause = true;
+                    zPause.setText(getString(R.string.ic_play));
+                }else{
+                    isPause = false;
+                    drawTimer();
+                    zPause.setText(getString(R.string.ic_pause));
+                }
+            }
+        });
     }
     private void checkScore(){
         if(0<timer&& timer<=10){

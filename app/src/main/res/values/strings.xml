@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Children English Game</string>
+    <string name="ic_pause">&#xf04c;</string>
+    <string name="ic_play">&#xf04b;</string>
 </resources>
