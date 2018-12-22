@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         zPause = (Button)findViewById(R.id.btnPause);
         layout= findViewById(R.id.MainLayout);
         layout.setBackgroundResource(R.drawable.background);
+
         //declare font awesome
         Typeface font = Typeface.createFromAsset( getAssets(), "fontawesome-webfont.ttf" );
         zPause.setTypeface(font);
@@ -498,8 +499,8 @@ public class MainActivity extends AppCompatActivity {
                 iv[i].setEnabled(false);
             }
 
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
+            Handler handlerImage = new Handler();
+            handlerImage.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     calculate(clickFirst,clickSecond);
