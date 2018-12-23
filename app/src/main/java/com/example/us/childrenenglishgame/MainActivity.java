@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     String tmpTime = "";
     boolean isPause = false;
     LinearLayout GPA;
+    PhoneStateReceiver psr = new PhoneStateReceiver();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
 
         tempID = 111;
         playGame(1);
-
         //
         zPause.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,9 +79,9 @@ public class MainActivity extends AppCompatActivity {
             mCountDownTimer.cancel();
             mCountDownTimer = null;
             isPause = true;
-            zPause.setText(getString(R.string.ic_play));
-            for (int i = 0; i < Shared.numbersOfCard; i++){
-                iv[i].setClickable(false);
+                zPause.setText(getString(R.string.ic_play));
+                for (int i = 0; i < Shared.numbersOfCard; i++){
+                    iv[i].setClickable(false);
             }
         }else{
             isPause = false;
