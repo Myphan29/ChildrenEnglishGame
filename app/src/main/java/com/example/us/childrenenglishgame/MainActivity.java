@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
         countID = Shared.numbersOfCard;
         addScreen(Shared.level);
         setOperation();
+        timeRemaining=60000;
     }
 
     private void setOperation(){
