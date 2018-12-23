@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     final Handler handler = new Handler();
     String tmpTime = "";
     boolean isPause = false;
+    long timeRemaining=60000;
     LinearLayout GPA;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +91,26 @@ public class MainActivity extends AppCompatActivity {
     public void PlayAndPause() {
         if (isPause == false) {
             mCountDownTimer.cancel();
-            mCountDownTimer = null;
             isPause = true;
             zPause.setText(getString(R.string.ic_play));
             for (int i = 0; i < Shared.numbersOfCard; i++){
                 iv[i].setClickable(false);
             }
+            AlertDialog.Builder alertDialogBuilder= new AlertDialog.Builder(MainActivity.this);
+            alertDialogBuilder.setMessage("PAUSE GAME \nYour score is "+score).setCancelable(false)
+                    .setPositiveButton("PLAY", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            PlayAndPause();
+                        }
+                    }).setNegativeButton("EXIT", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
         }else{
             isPause = false;
             drawTimer();
@@ -106,14 +122,16 @@ public class MainActivity extends AppCompatActivity {
     }
     private void drawTimer(){
         progressBar.setProgress(timer);
-        mCountDownTimer = new CountDownTimer(60000,1000) {
+        mCountDownTimer = new CountDownTimer(timeRemaining,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+                Log.d("millisUntilFinished ", "millisUntilFinished: "+millisUntilFinished);
+                Log.d("timer ", "timer: "+timer);
                 timer++;
                 txt_Timer.setText(timer+"/60");
                 progressBar.setProgress((int)timer*100/(60000/1000));
-                //
                 tmpTime = txt_Timer.getText().toString();
+                timeRemaining = millisUntilFinished-1000;
             }
             @Override
             public void onFinish() {
@@ -541,29 +559,31 @@ public class MainActivity extends AppCompatActivity {
             mCountDownTimer.cancel();
             AlertDialog.Builder alertDialogBuilder= new AlertDialog.Builder(MainActivity.this);
             if (Shared.level != 6){
-                alertDialogBuilder.setMessage("WIN! \nYour score is " + score)
-                        .setPositiveButton("NEXT", new DialogInterface.OnClickListener() {
-                            @Override
+                alertDialogBuilder.setTitle("WIN!\nYour score is " + score);
+                alertDialogBuilder.setItems(new CharSequence[]
+                                {"NEXT", "RESET", "SAVE SCORE", "EXIT"},
+                        new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                timer=0;
-                                playGame(Shared.level + 1);
-                                drawTimer();
-                            }
-                        })
-                        .setNegativeButton("RESET", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                score = 0;
-                                txt_Score.setText("Score: " + score);
-                                timer=0;
-                                playGame(1);
-                                drawTimer();
-                            }
-                        })
-                        .setNeutralButton("EXIT", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
+                                switch (which) {
+                                    case 0:
+                                        timer=0;
+                                        playGame(Shared.level + 1);
+                                        drawTimer();
+                                        break;
+                                    case 1:
+                                        score = 0;
+                                        txt_Score.setText("Score: " + score);
+                                        timer=0;
+                                        playGame(1);
+                                        drawTimer();
+                                        break;
+                                    case 2:
+                                        SaveScore();
+                                        break;
+                                    case 3:
+                                        finish();
+                                        break;
+                                }
                             }
                         });
             }
@@ -583,10 +603,21 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         finish();
                     }
+                }).setNeutralButton("SAVE SCORE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SaveScore();
+                    }
                 });
             }
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
         }
+    }
+    private void SaveScore(){
+        guest.setScore(score);
+        Long tsLong = System.currentTimeMillis()/1000;
+        String ts = tsLong.toString();
+        mDatabase.child("users").child(ts).setValue(guest);
     }
 }

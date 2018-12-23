@@ -1,6 +1,5 @@
 package com.example.us.childrenenglishgame;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -15,7 +14,6 @@ import android.widget.Toast;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInApi;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
@@ -107,7 +105,7 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
             }
         });
 
-        final Intent hightScore = new Intent(this, HightScoreActivity.class);
+        final Intent hightScore = new Intent(this, HighScoreActivity.class);
         btn_Score.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

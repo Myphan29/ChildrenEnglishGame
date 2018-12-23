@@ -1,15 +1,13 @@
 package com.example.us.childrenenglishgame;
 
-import android.app.Activity;
+import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,10 +18,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import java.util.Collections;
 
-
-public class HightScoreActivity extends AppCompatActivity {
+public class HighScoreActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabase;
     Button btn_back;
@@ -38,7 +34,9 @@ public class HightScoreActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         Query recentUser = mDatabase.child("users");
         grd_tb = (GridView) findViewById(R.id.grd_tb);
-        btn_back = (Button) findViewById(R.id.btn_back);
+        btn_back = (Button) findViewById(R.id.btn_backTutorial);
+        Typeface font = Typeface.createFromAsset( getAssets(), "fontawesome-webfont.ttf" );
+        btn_back.setTypeface(font);
         recentUser.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -73,7 +71,7 @@ public class HightScoreActivity extends AppCompatActivity {
                         Count++;
                     }
                 }
-                ada_Usernew = new ArrayAdapter<String>(HightScoreActivity.this, android.R.layout.simple_list_item_1, list_userNew);
+                ada_Usernew = new ArrayAdapter<String>(HighScoreActivity.this, android.R.layout.simple_list_item_1, list_userNew);
                 grd_tb.setAdapter(ada_Usernew);
 
 

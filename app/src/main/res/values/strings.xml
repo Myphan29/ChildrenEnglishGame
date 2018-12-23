@@ -2,6 +2,6 @@
     <string name="app_name">Children English Game</string>
     <string name="ic_pause">&#xf04c;</string>
     <string name="ic_play">&#xf04b;</string>
-    <string name="hight_score">Hight Score</string>
-    <string name="bakc"><![CDATA[<--]]></string>
+    <string name="high_score">High Score</string>
+    <string name="back">&#xf048;</string>
 </resources>
