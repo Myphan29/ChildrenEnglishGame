@@ -15,11 +15,17 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
+
+import org.w3c.dom.Text;
+
 import java.util.Arrays;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
-    TextView txt_Score,txt_Timer,txt_Level;
+    TextView txt_Score,txt_Timer, txt_user,txt_Level;
     ImageView[] iv;
     Button zPause;
     Integer[] cardsArray;
@@ -35,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     CountDownTimer mCountDownTimer;
     int timer=0;
+    private DatabaseReference mDatabase;
+    User guest;
     final Handler handler = new Handler();
     String tmpTime = "";
     boolean isPause = false;
@@ -44,9 +52,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         zPause = (Button)findViewById(R.id.btnPause);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         layout= findViewById(R.id.MainLayout);
         layout.setBackgroundResource(R.drawable.background);
-
+        Gson gson = new Gson();
+        guest= gson.fromJson(getIntent().getStringExtra("guest"), User.class);
+        txt_user = (TextView)findViewById(R.id.txt_user);
+        txt_user.setText(guest.getUsername());
         //declare font awesome
         Typeface font = Typeface.createFromAsset( getAssets(), "fontawesome-webfont.ttf" );
         zPause.setTypeface(font);

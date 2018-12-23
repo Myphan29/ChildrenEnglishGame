@@ -98,4 +98,16 @@
         android:minHeight="50dp"
         android:progress="1" />
 
+    <TextView
+        android:id="@+id/txt_user"
+        android:layout_width="324dp"
+        android:layout_height="61dp"
+        android:layout_alignStart="@+id/pbTimer"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="70dp"
+        android:fontFamily="cursive"
+        android:textSize="30sp"
+        android:textStyle="bold|italic" />
+
 </RelativeLayout>

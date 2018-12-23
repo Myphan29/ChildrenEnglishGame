@@ -1,5 +1,6 @@
 package com.example.us.childrenenglishgame;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -22,25 +24,27 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.Task;
+import com.google.gson.Gson;
 
 public class FirstMainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
-    Button btn_Play,btn_SignOut,btn_Exit;
+    Button btn_Play,btn_SignOut,btn_Exit,btn_Score,btn_About;
     SignInButton btn_SignIn;
     TextView txt_Name;
 
     private GoogleApiClient mGoogleApiClient;
     int RC_SIGN_IN = 1;
+    User guest = new User();
 
-    public static String name = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_main);
+        // instant User
 
-
+        btn_Score = (Button)findViewById(R.id.btn_Score);
         txt_Name = (TextView)findViewById(R.id.txtTen);
-
+        btn_About = findViewById(R.id.btn_about);
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -55,10 +59,32 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
         final Intent mainActivy = new Intent(this, MainActivity.class);
 
         btn_Play = (Button)findViewById(R.id.btn_Play);
+        Log.d("Meoooo","suuu" + guest.getUsername());
         btn_Play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(mainActivy);
+
+                if (guest.getUsername() != null) {
+                    Gson gson = new Gson();
+                    String myJson = gson.toJson(guest);
+                    mainActivy.putExtra("guest", myJson);
+                    startActivity(mainActivy);
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "Please login for play game",
+                            Toast.LENGTH_SHORT);
+
+                    toast.show();
+
+                }
+
+            }
+        });
+        final Intent tut = new Intent(this, TutActivity.class);
+        btn_About.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(tut);
             }
         });
         btn_Exit = (Button)findViewById(R.id.btn_Exit);
@@ -81,6 +107,13 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
             }
         });
 
+        final Intent hightScore = new Intent(this, HightScoreActivity.class);
+        btn_Score.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(hightScore);
+            }
+        });
         btn_SignOut = (Button)findViewById(R.id.btn_SignOut) ;
         btn_SignOut.setVisibility(View.INVISIBLE);
         btn_SignOut.setOnClickListener(new View.OnClickListener() {
@@ -108,11 +141,15 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
 
             // Signed in successfully, show authenticated UI.
-            txt_Name.setText(account.getDisplayName());
-            name = account.getDisplayName();
+            guest.username = account.getDisplayName();
+            guest.email = account.getEmail();
+            guest.token = account.getIdToken();
+            txt_Name.setText(guest.getUsername());
+
+            Log.d("Account " , "account" + guest.getUsername());
             btn_SignOut.setVisibility(View.VISIBLE);
         } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
+            // The ApiException status code indicates the detailed failure sreason.
             // Please refer to the GoogleSignInStatusCodes class reference for more information.
         }
     }
@@ -126,7 +163,8 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
-                txt_Name.setText("Thoát thành công");
+                guest.clearInfo();
+                txt_Name.setText("...");
                 AlertDialog.Builder alertDiaglogBuilder= new AlertDialog.Builder(FirstMainActivity.this);
                 alertDiaglogBuilder.setMessage("Thoát thành công");
                 AlertDialog alertDialog = alertDiaglogBuilder.create();
@@ -140,7 +178,5 @@ public class FirstMainActivity extends AppCompatActivity implements GoogleApiCli
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d("Failed",connectionResult +"");
     }
-    public static String getNamePlayer(){
-        return name;
-    }
+
 }
